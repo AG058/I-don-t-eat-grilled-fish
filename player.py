@@ -10,7 +10,18 @@ class Player(pygame.sprite.Sprite):
 
         self.active_size = active_size
 
+        # 初始化上火值，心情值，营养值，分数
+        self.inflamed_value = 0
+        self.mood_walue = 100
+        self.nutritional_value = 100
+        self.score = 0
+
+        # 三个值状态
+        self.inflamed_value_status = False
+        self.mood_walue_status = False
+        self.nutritional_value_status = False
         
+    # 边缘检测 
     def check(self):
         self.rect.center = pygame.mouse.get_pos()
         if self.rect.left != 0 :
@@ -19,3 +30,23 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom >= self.active_size[1] + 15:
             self.rect.bottom = self.active_size[1] +15
+
+    def check_value(self):
+        if self.inflamed_value <= 0 :
+            self.inflamed_value = 0
+        if self.inflamed_value >= 100 :
+            self.inflamed_value = 100
+            self.inflamed_value_status = True
+        if self.mood_walue <= 0 :
+            self.mood_walue = 0
+            self.mood_walue_status = True
+        if self.mood_walue >= 100 :
+            self.mood_walue = 100
+        if self.nutritional_value <= 0 :
+            self.nutritional_value = 0
+            self.nutritional_value_status = True
+        if self.nutritional_value >= 100 :
+            self.nutritional_value = 100
+            
+    
+    

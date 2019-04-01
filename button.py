@@ -1,6 +1,7 @@
 import pygame
 from materials import *
 
+# 文字按钮
 class TextButton(pygame.sprite.Sprite):
     def __init__(self , font , text , unpress_color , press_color , position):
         pygame.sprite.Sprite.__init__(self)
@@ -11,6 +12,7 @@ class TextButton(pygame.sprite.Sprite):
         self.rect.center = position
         self.state = False
 
+    # 判断鼠标位置是否在按钮上，并且绘制相应按钮样式
     def is_or_not_in_and_blit(self ,screen):
         mouse_pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(mouse_pos):
@@ -20,6 +22,7 @@ class TextButton(pygame.sprite.Sprite):
             screen.blit(self.unpress , self.rect)
             self.state = False
 
+    # 判断鼠标是否在按钮上
     def is_or_not_press(self):
         if self.state:
             return True

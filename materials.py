@@ -4,13 +4,13 @@ from food import *
 from player import *
 from random import *
 
+# 初始化
 pygame.init()
 pygame.mixer.init()
 
 # 定义屏幕大小
 screen_size = screen_size_width , screen_size_height = 800 , 600
 screen_size_center = screen_size_width // 2 , screen_size_height // 2
-
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption('游戏标题')
 
@@ -30,16 +30,21 @@ start_game_background_image = pygame.image.load('images/start_game_background.jp
 start_game_background_image_rect = start_game_background_image.get_rect()
 
 # 定义字体
-food_font = pygame.font.Font('font/food_font.ttf' , 20)
-button_font = pygame.font.Font('font/food_font.ttf' , 40)
+food_font = pygame.font.Font('font/font.ttf' , 20)
+button_font = pygame.font.Font('font/font.ttf' , 40)
+status_bar_font = pygame.font.Font('font/font.ttf' , 25)
 
 # 定义游戏界面按钮
 start_game_button = TextButton(button_font ,' 开  始  游  戏' , BLACK , GRAY_1 , (400 , 500) )
 
+# 水果速度
+fruit_speed = 3
 # 食物名称，速度，上火值，心情值，营养值，分数
-foolliast_v1= [['米饭',3,0,5,10,10] , ['热水',5,-5,5,3,10] , ['炒饭',3,10,10,10,15],
-               ['白粥',2,-5,3,3,5] , ['苹果',4,-5,10,5,10] , ['雪梨',3,-10,10,5,15]]
-foolliast_v3 = [['烤鱼',1,50,50,80,3]]
+food_v1_path = 'images/food/v1/'
+food_v1= [ [food_v1_path+'apple.png',fruit_speed,-2,5,5,10] , [food_v1_path+'milk.png',3,3,10,5,10],
+           [food_v1_path+'rice.png' , 3 , 0 , 5, 10 , 10] , [food_v1_path+'pear.png',fruit_speed,-5,5,5,10],
+           [food_v1_path+'rice_ball.png' , fruit_speed , 0 , 7 , 10 , 15]]
+food_v3 = [['烤鱼',1,50,50,80,3]]
 
 # 导入玩家
 player = Player('images/player.png',screen_active_size)
@@ -47,11 +52,11 @@ player = Player('images/player.png',screen_active_size)
 # 创建食物组
 food_group = pygame.sprite.Group()
 
-# 创建初始食物
-for i in range(20):
-    food_name , food_speed , food_inflamed_value , food_mood_walue , food_nutritional_value , food_score \
-              = choice(foolliast_v1)
-    food = FoodText_v1(screen_active_size , food_font , BLACK , \
-                       food_name , food_speed , food_inflamed_value , \
-                       food_mood_walue , food_nutritional_value , food_score )
-    food_group.add(food)
+# 创建初始v1食物，每种5个
+for food_name , food_speed , food_inflamed_value , food_mood_walue , food_nutritional_value , food_score \
+              in food_v1 :
+    for i in range(5):
+        food = FoodText_v1(screen_active_size ,  \
+                           food_name , food_speed , food_inflamed_value , \
+                           food_mood_walue , food_nutritional_value , food_score )
+        food_group.add(food)
