@@ -2,7 +2,7 @@ import pygame
 from random import  *
 
 class FoodText_v1(pygame.sprite.Sprite):
-    def __init__(self , active_size , food_image , speed , inflamed_value , mood_walue , nutritional_value , score ):
+    def __init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score ):
         pygame.sprite.Sprite.__init__(self)
 
         self.before_image = pygame.image.load(food_image).convert_alpha() # 导入图片
@@ -13,7 +13,7 @@ class FoodText_v1(pygame.sprite.Sprite):
         # 初始化速度，上火值，心情值，营养值，分数
         self.speed = speed
         self.inflamed_value = inflamed_value
-        self.mood_walue = mood_walue
+        self.mood_value = mood_value
         self.nutritional_value = nutritional_value
         self.score = score
 
