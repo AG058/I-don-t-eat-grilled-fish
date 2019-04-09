@@ -45,10 +45,22 @@ start_game_button = TextButton(button_font ,' 开  始  游  戏' , BLACK , GRAY
 fruit_speed = 3
 # 食物名称，速度，上火值，心情值，营养值，分数
 food_v1_path = 'images/food/v1/'
-food_v1= [ [food_v1_path+'apple.png',fruit_speed,-2,5,5,10] , [food_v1_path+'milk.png',3,3,10,5,10],
-           [food_v1_path+'rice.png' , 3 , 0 , 5, 10 , 10] , [food_v1_path+'pear.png',fruit_speed,-5,5,5,10],
-           [food_v1_path+'rice_ball.png' , fruit_speed , 0 , 7 , 10 , 15]]
-food_v3 = [['烤鱼',1,50,50,80,3]]
+food_v1 = [ [food_v1_path+'apple.png',fruit_speed,-2,5,5,3] ,
+            [food_v1_path+'milk.png',3,3,10,5,4],
+           [food_v1_path+'rice.png' , 3 , -3 , 5, 10 , 3] ,
+            [food_v1_path+'pear.png',fruit_speed,-5,5,5,3],
+           [food_v1_path+'rice_ball.png' , fruit_speed , -3 , 7 , 10 , 3]]
+food_v2_path = 'images/food/v2/'
+food_v2 = [ [food_v2_path + 'bagel.png' , 4 , 8 , 20 , 15 , 8] ,
+            [food_v2_path + 'bread.png' , 4 , 8 , 15 , 10 , 8] ,
+            [food_v2_path + 'chocolate.png' , 3 , 10 , 20 , 10 , 10],
+            [food_v2_path + 'lollipop.png' , 4 , 5 , 10 , 5 , 6] ,
+            [food_v2_path + 'meat-on-bone.png' , 3 ,3 , 20 , 25 , 12],
+            [food_v2_path + 'watermelon.png' , 3 , -5 , 15 , 5 ,3]]
+food_v3_path = 'images/food/v3/'
+
+
+
 
 # 自定义事件：心情值，营养值随时间每一秒减少
 REDUCE_VALUE = USEREVENT
@@ -60,11 +72,14 @@ player = Player('images/player.png',screen_active_size)
 # 创建食物组
 food_group = pygame.sprite.Group()
 
-# 创建初始v1食物，每种5个
+# 创建初始v1食物，每种4个
 for food_name , food_speed , food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
               in food_v1 :
-    for i in range(5):
-        food = FoodText_v1(screen_active_size ,  \
+    for i in range(4):
+        food = Food_v1(screen_active_size ,  \
                            food_name , food_speed , food_inflamed_value , \
                            food_mood_value , food_nutritional_value , food_score )
         food_group.add(food)
+
+# 初始化级别
+level = 1

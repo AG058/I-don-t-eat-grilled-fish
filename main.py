@@ -11,6 +11,7 @@ clock = pygame.time.Clock()
 while True:
     # 延迟
     delay = 100
+    # 游戏进入界面
     while game_menu:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -53,7 +54,7 @@ while True:
         screen.fill((255 , 255 , 255))
 
         # 判断是否碰撞
-        player_food_collide = pygame.sprite.spritecollide(player , food_group , False , pygame.sprite.collide_mask)
+        player_food_collide = pygame.sprite.spritecollide(player , food_group , False , pygame.sprite.collide_circle)
         if player_food_collide:
             for each in player_food_collide:
                 player.inflamed_value += each.inflamed_value
@@ -81,70 +82,85 @@ while True:
 
         
         # 绘制上火条 ， 以下代码是找适当的位置放条
+        # 绘制”上火“
         inflamed_value_bar_text = status_bar_font.render('上火' , True , status_bar_font_color)
         inflamed_value_bar_text_rect = inflamed_value_bar_text.get_rect()
-        inflamed_value_bar_text_rect.center = (screen_size_width / 19 , 582)
+        inflamed_value_bar_text_rect.center = (screen_size_width / 18 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(inflamed_value_bar_text ,  inflamed_value_bar_text_rect)
-        
-        inflamed_value_bar_num_text = status_bar_font.render(str(player.inflamed_value), True , status_bar_font_color)
-        inflamed_value_bar_num_text_rect = inflamed_value_bar_num_text.get_rect()
-        inflamed_value_bar_num_text_rect.center = inflamed_value_bar_text_rect.centerx+inflamed_value_bar_text_rect.width //2 +\
-                                                  100 + inflamed_value_bar_num_text_rect.width //2 +10 , 582
-        screen.blit(inflamed_value_bar_num_text , inflamed_value_bar_num_text_rect)
+        # 绘制血条
         if player.inflamed_value < 80 :
             pygame.draw.rect(screen , GREEN , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
-                                           inflamed_value_bar_text_rect.top + 2 , player.inflamed_value , inflamed_value_bar_text_rect.height -4  ) )
+                                           inflamed_value_bar_text_rect.top  , player.inflamed_value , inflamed_value_bar_text_rect.height   ) )
         elif 80 <= player.inflamed_value <= 100 :
             pygame.draw.rect(screen , RED , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
-                                           inflamed_value_bar_text_rect.top + 2 , player.inflamed_value , inflamed_value_bar_text_rect.height -4  ) )
-        pygame.draw.rect(screen , status_bar_font_color , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
-                                           inflamed_value_bar_text_rect.top + 2 , 100 , inflamed_value_bar_text_rect.height -4  ) , 1)
+                                           inflamed_value_bar_text_rect.top  , player.inflamed_value , inflamed_value_bar_text_rect.height   ) )
+        r_i = pygame.draw.rect(screen , status_bar_font_color , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
+                                           inflamed_value_bar_text_rect.top  , 100 , inflamed_value_bar_text_rect.height   ) , 1)
+        # 绘制血条数字     
+        inflamed_value_bar_num_text = status_bar_font.render(str(player.inflamed_value), True , status_bar_font_color)
+        inflamed_value_bar_num_text_rect = inflamed_value_bar_num_text.get_rect()
+        inflamed_value_bar_num_text_rect.topleft =  r_i.right + 2 , inflamed_value_bar_text_rect.top 
+        screen.blit(inflamed_value_bar_num_text , inflamed_value_bar_num_text_rect)
 
         
         # 绘制心情条
+        # 绘制”心情“
         mood_value_bar_text = status_bar_font.render('心情' , True , status_bar_font_color)
         mood_value_bar_text_rect = mood_value_bar_text.get_rect()
-        mood_value_bar_text_rect.center = (screen_size_width / 15 * 4 , 582)
+        mood_value_bar_text_rect.center = (screen_size_width / 18 * 5 +5 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(mood_value_bar_text ,  mood_value_bar_text_rect)
-        
+        # 绘制血条
+        if player.mood_value < 20 :
+            pygame.draw.rect(screen , RED , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
+                                           mood_value_bar_text_rect.top  , player.mood_value , mood_value_bar_text_rect.height   ) )
+        elif 20 <= player.mood_value <= 100 :
+            pygame.draw.rect(screen , GREEN , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
+                                           mood_value_bar_text_rect.top  , player.mood_value , mood_value_bar_text_rect.height   ) )
+        r_m = pygame.draw.rect(screen , status_bar_font_color , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
+                                           mood_value_bar_text_rect.top  , 100 , mood_value_bar_text_rect.height   ) , 1)
+        # 绘制血条数字     
         mood_value_bar_num_text = status_bar_font.render(str(player.mood_value), True , status_bar_font_color)
         mood_value_bar_num_text_rect = mood_value_bar_num_text.get_rect()
-        mood_value_bar_num_text_rect.center = mood_value_bar_text_rect.centerx+mood_value_bar_text_rect.width //2 +\
-                                                  100 + mood_value_bar_num_text_rect.width //2 +10 , 582
+        mood_value_bar_num_text_rect.topleft =  r_m.right + 2 , mood_value_bar_text_rect.top 
         screen.blit(mood_value_bar_num_text , mood_value_bar_num_text_rect)
-        if 20 < player.mood_value <= 100 :
-            pygame.draw.rect(screen , GREEN , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
-                                          mood_value_bar_text_rect.top + 2 , player.mood_value , mood_value_bar_text_rect.height -4  )  )
-        elif 0 <= player.inflamed_value <= 20 :
-            pygame.draw.rect(screen , RED , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
-                                           mood_value_bar_text_rect.top + 2 , player.mood_value , mood_value_bar_text_rect.height -4  )  )
-        pygame.draw.rect(screen , status_bar_font_color , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
-                                           mood_value_bar_text_rect.top + 2 , 100 , mood_value_bar_text_rect.height -4  ) , 1)
 
         # 绘制营养条
+        # 绘制”营养“
         nutritional_value_bar_text = status_bar_font.render('营养' , True , status_bar_font_color)
         nutritional_value_bar_text_rect = nutritional_value_bar_text.get_rect()
-        nutritional_value_bar_text_rect.center = (screen_size_width / 18 * 9 , 582)
+        nutritional_value_bar_text_rect.center = (screen_size_width / 18 * 9 +10 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(nutritional_value_bar_text ,  nutritional_value_bar_text_rect)
-        
+        # 绘制血条
+        if player.nutritional_value < 20 :
+            pygame.draw.rect(screen , RED , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
+                                           nutritional_value_bar_text_rect.top  , player.nutritional_value , nutritional_value_bar_text_rect.height   ) )
+        elif 20 <= player.nutritional_value<= 100 :
+            pygame.draw.rect(screen , GREEN , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
+                                           nutritional_value_bar_text_rect.top  , player.nutritional_value , nutritional_value_bar_text_rect.height   ) )
+        r_n = pygame.draw.rect(screen , status_bar_font_color , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
+                                           nutritional_value_bar_text_rect.top  , 100 , nutritional_value_bar_text_rect.height   ) , 1)
+        # 绘制血条数字     
         nutritional_value_bar_num_text = status_bar_font.render(str(player.nutritional_value), True , status_bar_font_color)
         nutritional_value_bar_num_text_rect = nutritional_value_bar_num_text.get_rect()
-        nutritional_value_bar_num_text_rect.center = nutritional_value_bar_text_rect.centerx+nutritional_value_bar_text_rect.width //2 +\
-                                                  100 + nutritional_value_bar_num_text_rect.width //2 +10 , 582
+        nutritional_value_bar_num_text_rect.topleft =  r_n.right + 2 , nutritional_value_bar_text_rect.top 
         screen.blit(nutritional_value_bar_num_text , nutritional_value_bar_num_text_rect)
-        if 20 < player.nutritional_value <= 100 :
-            pygame.draw.rect(screen , GREEN , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
-                                          nutritional_value_bar_text_rect.top + 2 , player.nutritional_value , nutritional_value_bar_text_rect.height -4  )  )
-        elif 0 <= player.nutritional_value <= 20 :
-            pygame.draw.rect(screen , RED , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
-                                           nutritional_value_bar_text_rect.top + 2 , player.nutritional_value , nutritional_value_bar_text_rect.height -4  )  )
-        pygame.draw.rect(screen , status_bar_font_color , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
-                                           nutritional_value_bar_text_rect.top + 2 , 100 , nutritional_value_bar_text_rect.height -4  ) , 1)
 
         # 绘制分数条
         score_text = status_bar_font.render('分数：'+str(player.score) , True , status_bar_font_color)
-        screen.blit(score_text , (screen_size_width / 18 * 15 , nutritional_value_bar_text_rect.top ))
-        
+        screen.blit(score_text , (screen_size_width / 18 * 13 + 10, nutritional_value_bar_text_rect.top ))
+
+        # 判断分数是否达到下一等级
+        if player.score >= 25and level == 1:
+            level = 2
+            # 创建初始v2食物，每种3个
+            for food_name , food_speed , food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+                          in food_v2 :
+                for i in range(3):
+                    food = Food_v1(screen_active_size ,  \
+                                       food_name , food_speed , food_inflamed_value , \
+                                       food_mood_value , food_nutritional_value , food_score )
+                    food_group.add(food)
+
         # 更新屏幕
         pygame.display.update()
         clock.tick(60)

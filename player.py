@@ -16,6 +16,9 @@ class Player(pygame.sprite.Sprite):
         self.nutritional_value = 100
         self.score = 0
 
+        # 初始化半径
+        self.radius = 7
+
         # 三个值状态
         self.inflamed_value_status = False
         self.mood_value_status = False

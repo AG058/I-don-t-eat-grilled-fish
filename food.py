@@ -1,7 +1,7 @@
 import pygame
 from random import  *
 
-class FoodText_v1(pygame.sprite.Sprite):
+class Food_v1(pygame.sprite.Sprite):
     def __init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score ):
         pygame.sprite.Sprite.__init__(self)
 
@@ -21,8 +21,11 @@ class FoodText_v1(pygame.sprite.Sprite):
         self.active_size = active_size
 
         # 初始化位置
-        self.rect.top = randint(10 , self.active_size[1] -15 )
-        self.rect.left = randint( self.active_size[0] , self.active_size[0] * 5)
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0] , self.active_size[0] * 8)
+
+        # 初始化半径
+        self.radius = self.rect.width // 2
 
     # 移动
     def move(self):
@@ -32,5 +35,17 @@ class FoodText_v1(pygame.sprite.Sprite):
 
     # 重新初始化位置 
     def reset(self):
-        self.rect.top = randint(10 , self.active_size[1] -15 )
-        self.rect.left = randint( self.active_size[0] , self.active_size[0] * 5)
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0] , self.active_size[0] * 8)
+
+class Food_v2(Food_v1):
+    def __init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score ):
+        Food_v1.__init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score )
+
+        # 初始化位置
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0] * 7 , self.active_size[0] * 15)
+        
+    def reset(self):
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0] * 7 , self.active_size[0] * 15)
