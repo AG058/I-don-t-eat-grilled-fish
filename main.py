@@ -38,20 +38,30 @@ while True:
         clock.tick(10)
 
     # 开始游戏
+    # 初始化目标计时器，目标分数
+    target_time ,  target_score= targets[level][0] , targets[level][1]
     while start_game:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
-            # 心情值，营养值随每秒减少
-            if event.type == REDUCE_VALUE:
+            # 心情值，营养值随每秒减少，倒计时减少
+            if event.type == TIME:
                 player.mood_value -= 2
                 player.nutritional_value -= 3
+                target_time -= 1
+                if target_time <= 0 : # 倒计时结束
+                    if player.score >= target_score : # 玩家分数达到目标分数
+                        next_level = True # 下一关界面开启
+                        start_game = False
+                    else :
+                        game_over_because_score = True # 记录由于分数未达到导致失败
+                        game_over = True
+                        start_game = False
                 
         # 绘制背景
-        # screen.blit(start_game_background_image , start_game_background_image_rect)
-        screen.fill((255 , 255 , 255))
+        screen.blit(start_game_background_image , start_game_background_image_rect)
 
         # 判断是否碰撞
         player_food_collide = pygame.sprite.spritecollide(player , food_group , False , pygame.sprite.collide_circle)
@@ -149,6 +159,12 @@ while True:
         score_text = status_bar_font.render('分数：'+str(player.score) , True , status_bar_font_color)
         screen.blit(score_text , (screen_size_width / 18 * 13 + 10, nutritional_value_bar_text_rect.top ))
 
+        # 绘制目标分数，倒计时
+        target_text = target_font.render('目标分数：%d  倒计时：%d' % (target_score , target_time) , True , status_bar_font_color)
+        target_text_rect = target_text.get_rect()
+        target_text_rect.topleft= screen_size_width - target_text_rect.width  , 10
+        screen.blit(target_text , target_text_rect)
+        
         # 判断分数是否达到下一等级
         if player.score >= 25and level == 1:
             level = 2
@@ -163,4 +179,4 @@ while True:
 
         # 更新屏幕
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)

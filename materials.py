@@ -30,13 +30,14 @@ status_bar_font_color = BLACK
 # 导入图片
 game_menu_background_image = pygame.image.load('images/game_menu_background.jpg')
 game_menu_background_image_rect = game_menu_background_image.get_rect()
-start_game_background_image = pygame.image.load('images/start_game_background.jpg')
+start_game_background_image = pygame.image.load('images/start_game_background.png')
 start_game_background_image_rect = start_game_background_image.get_rect()
 
 # 定义字体
 food_font = pygame.font.Font('font/font.ttf' , 20)
 button_font = pygame.font.Font('font/font.ttf' , 40)
 status_bar_font = pygame.font.Font('font/font.ttf' , 15)
+target_font = pygame.font.Font('font/font.ttf' , 20)
 
 # 定义游戏界面按钮
 start_game_button = TextButton(button_font ,' 开  始  游  戏' , BLACK , GRAY_1 , (400 , 500) )
@@ -63,8 +64,12 @@ food_v3_path = 'images/food/v3/'
 
 
 # 自定义事件：心情值，营养值随时间每一秒减少
-REDUCE_VALUE = USEREVENT
-pygame.time.set_timer(REDUCE_VALUE , 1 * 1000)
+TIME = USEREVENT
+pygame.time.set_timer(TIME , 1 * 1000)
+
+# 目标时间以及目标分数
+targets = {1:[30,25] ,
+           2:[30,125]}
 
 # 导入玩家
 player = Player('images/player.png',screen_active_size)

@@ -1,5 +1,4 @@
 import pygame
-from materials import *
 
 # 文字按钮
 class TextButton(pygame.sprite.Sprite):
