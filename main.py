@@ -5,6 +5,8 @@ from materials import *
 game_menu = True
 start_game = False
 game_over = False
+game_over_because_score = False # 录由于分数未达到导致失败
+next_level = False  # 下一关界面开启
 
 clock = pygame.time.Clock()
 
@@ -39,7 +41,7 @@ while True:
 
     # 开始游戏
     # 初始化目标计时器，目标分数
-    target_time ,  target_score= targets[level][0] , targets[level][1]
+    target_time ,  target_score= targets[target_level][0] , targets[target_level][1]
     while start_game:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -165,14 +167,14 @@ while True:
         target_text_rect.topleft= screen_size_width - target_text_rect.width  , 10
         screen.blit(target_text , target_text_rect)
         
-        # 判断分数是否达到下一等级
-        if player.score >= 25and level == 1:
-            level = 2
+        # 判断分数是否达到下一水果等级
+        if player.score >= 25 and food_level == 1:
+            food_level = 2
             # 创建初始v2食物，每种3个
             for food_name , food_speed , food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
                           in food_v2 :
                 for i in range(3):
-                    food = Food_v1(screen_active_size ,  \
+                    food = Food_v2(screen_active_size ,  \
                                        food_name , food_speed , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)

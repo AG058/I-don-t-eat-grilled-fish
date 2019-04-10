@@ -87,4 +87,5 @@ for food_name , food_speed , food_inflamed_value , food_mood_value , food_nutrit
         food_group.add(food)
 
 # 初始化级别
-level = 1
+food_level = 1
+target_level = 1
