@@ -1,5 +1,3 @@
-import sys , pygame
-from pygame.locals import *
 from materials import *
 
 game_menu = True
@@ -7,7 +5,7 @@ start_game = False
 game_over = False
 game_over_because_score = False # 录由于分数未达到导致失败
 next_level = False  # 下一关界面开启
-
+pause_status = False # 初始化暂停为false
 clock = pygame.time.Clock()
 
 while True:
@@ -24,7 +22,7 @@ while True:
             if event.type == MOUSEBUTTONDOWN:
                 temp = start_game_button.is_or_not_press()
                 if temp :
-                    start_game = True
+                    next_level = True
                     game_menu = False
                     break
                 
@@ -39,28 +37,95 @@ while True:
         pygame.display.update()
         clock.tick(10)
 
-    # 开始游戏
+    
     # 初始化目标计时器，目标分数
     target_time ,  target_score= targets[target_level][0] , targets[target_level][1]
+    # 下一关开启界面只持续3秒钟，初始化时间
+    next_time = 0
+    # 下一关开启界面
+    while next_level:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+            # 判断暂停
+            if event.type == KEYUP:
+                if event.key == K_SPACE:
+                    pause_status = not pause_status
+                    
+            # 如果显示显示时间是否足够3秒
+            if event.type == TIME:
+                if pause_status == False :
+                    if next_time == 3:
+                        start_game = True
+                        next_level = False
+                    else:
+                        next_time += 1
+
+        # 绘制背景
+        if target_level == 1:
+            screen.blit(start_game_background_image , start_game_background_image_rect)
+        # 绘制文字背景框
+        screen.blit(text_background_image , text_background_image_rect)
+        # 绘制关卡提示文字
+        next_target_text = font_55.render('第 %d 关' % target_level , True , next_target_font_color)
+        next_target_text_rect = next_target_text.get_rect()
+        next_target_text_rect.center = text_background_image_rect.center[0] , \
+                                       text_background_image_rect.top + text_background_image_rect.height // 3
+        screen.blit(next_target_text , next_target_text_rect)
+        next_target_time_text = font_35.render('时间：%d' % (target_time ) , True , next_target_font_color)
+        next_target_time_text_rect = next_target_time_text.get_rect()
+        next_target_time_text_rect.center = text_background_image_rect.center[0] , \
+                                       text_background_image_rect.top + text_background_image_rect.height // 5 * 3
+        screen.blit(next_target_time_text , next_target_time_text_rect)
+        next_target_score_text = font_35.render('分数：%d' % (target_score ) , True , next_target_font_color)
+        next_target_score_text_rect = next_target_score_text.get_rect()
+        next_target_score_text_rect.center = text_background_image_rect.center[0] , \
+                                       text_background_image_rect.top + text_background_image_rect.height // 5 * 4
+        screen.blit(next_target_score_text , next_target_score_text_rect)
+        
+
+        # 绘制开始暂停按钮
+        unpause_and_pause_button_image_rect.centery = screen_size_height - \
+                                                      (screen_size_height - screen_active_size[1]) // 2
+        unpause_and_pause_button_image_rect.right = screen_size_width - 10
+        if pause_status :
+            screen.blit(pause_button_image , unpause_and_pause_button_image_rect)
+        else :
+            screen.blit(unpause_button_image , unpause_and_pause_button_image_rect)
+            
+        # 更新屏幕
+        pygame.display.update()
+        clock.tick(10)
+        
+    # 开始游戏
     while start_game:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
+            # 用户按下空格键暂停游戏
+            if event.type == KEYUP:
+                if event.key == K_SPACE:
+                    pause_status = not pause_status
+                    
             # 心情值，营养值随每秒减少，倒计时减少
             if event.type == TIME:
-                player.mood_value -= 2
-                player.nutritional_value -= 3
-                target_time -= 1
-                if target_time <= 0 : # 倒计时结束
-                    if player.score >= target_score : # 玩家分数达到目标分数
-                        next_level = True # 下一关界面开启
-                        start_game = False
-                    else :
-                        game_over_because_score = True # 记录由于分数未达到导致失败
-                        game_over = True
-                        start_game = False
+                if pause_status == False:
+                    player.mood_value -= 2
+                    player.nutritional_value -= 3
+                    target_time -= 1
+                    if target_time <= 0 : # 倒计时结束
+                        if player.score >= target_score : # 玩家分数达到目标分数
+                            next_level = True # 下一关界面开启
+                            target_level += 1
+                            start_game = False
+                        else :
+                            game_over_because_score = True # 记录由于分数未达到导致失败
+                            game_over = True
+                            start_game = False
                 
         # 绘制背景
         screen.blit(start_game_background_image , start_game_background_image_rect)
@@ -84,12 +149,15 @@ while True:
                 each.reset()
                 
         # 绘制玩家
-        player.check()  # 检查边缘
+        if pause_status == False:
+            player.check()  # 检查边缘
         screen.blit(player.image , player.rect)
 
         # 绘制食物
+        if pause_status == False:
+            for each in food_group:
+                each.move()
         for each in food_group:
-            each.move()
             screen.blit(each.image , each.rect)
 
         
@@ -164,9 +232,18 @@ while True:
         # 绘制目标分数，倒计时
         target_text = target_font.render('目标分数：%d  倒计时：%d' % (target_score , target_time) , True , status_bar_font_color)
         target_text_rect = target_text.get_rect()
-        target_text_rect.topleft= screen_size_width - target_text_rect.width  , 10
+        target_text_rect.topleft= screen_size_width - target_text_rect.width -10 , 10
         screen.blit(target_text , target_text_rect)
-        
+
+        # 绘制开始暂停按钮
+        unpause_and_pause_button_image_rect.centery = screen_size_height - \
+                                                      (screen_size_height - screen_active_size[1]) // 2
+        unpause_and_pause_button_image_rect.right = screen_size_width - 10
+        if pause_status :
+            screen.blit(pause_button_image , unpause_and_pause_button_image_rect)
+        else :
+            screen.blit(unpause_button_image , unpause_and_pause_button_image_rect)
+            
         # 判断分数是否达到下一水果等级
         if player.score >= 25 and food_level == 1:
             food_level = 2
@@ -181,4 +258,4 @@ while True:
 
         # 更新屏幕
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(60)

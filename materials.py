@@ -1,4 +1,4 @@
-import pygame
+import pygame , sys
 from pygame.locals import *
 from button import *
 from food import *
@@ -26,18 +26,27 @@ GRAY_2 = 170 , 170 , 170
 GREEN = 0 , 255 , 0
 RED = 255 , 0 , 0
 status_bar_font_color = BLACK
+next_target_font_color = BLACK
 
 # 导入图片
 game_menu_background_image = pygame.image.load('images/game_menu_background.jpg')
 game_menu_background_image_rect = game_menu_background_image.get_rect()
-start_game_background_image = pygame.image.load('images/start_game_background.png')
+start_game_background_image = pygame.image.load('images/start_game_background.png').convert_alpha()
 start_game_background_image_rect = start_game_background_image.get_rect()
+text_background_image = pygame.image.load('images/text_background.png').convert_alpha()
+text_background_image_rect = text_background_image.get_rect()
+text_background_image_rect.center = start_game_background_image_rect.center
+unpause_button_image = pygame.image.load('images/unpause_button.png').convert_alpha()
+pause_button_image = pygame.image.load('images/pause_button.png').convert_alpha()
+unpause_and_pause_button_image_rect = unpause_button_image.get_rect()
 
 # 定义字体
 food_font = pygame.font.Font('font/font.ttf' , 20)
 button_font = pygame.font.Font('font/font.ttf' , 40)
 status_bar_font = pygame.font.Font('font/font.ttf' , 15)
 target_font = pygame.font.Font('font/font.ttf' , 20)
+font_55 =  pygame.font.Font('font/font.ttf' , 55)
+font_35 = pygame.font.Font('font/font.ttf' , 35)
 
 # 定义游戏界面按钮
 start_game_button = TextButton(button_font ,' 开  始  游  戏' , BLACK , GRAY_1 , (400 , 500) )
@@ -61,15 +70,13 @@ food_v2 = [ [food_v2_path + 'bagel.png' , 4 , 8 , 20 , 15 , 8] ,
 food_v3_path = 'images/food/v3/'
 
 
-
-
 # 自定义事件：心情值，营养值随时间每一秒减少
 TIME = USEREVENT
 pygame.time.set_timer(TIME , 1 * 1000)
 
 # 目标时间以及目标分数
 targets = {1:[30,25] ,
-           2:[30,125]}
+           2:[40,125]}
 
 # 导入玩家
 player = Player('images/player.png',screen_active_size)

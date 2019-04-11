@@ -27,6 +27,10 @@ class Food_v1(pygame.sprite.Sprite):
         # 初始化半径
         self.radius = self.rect.width // 2
 
+        # 当用户按下暂停键时的速度
+        self.pause_speed = 0
+        self.unpause_speed = self.speed
+
     # 移动
     def move(self):
         self.rect.left -= self.speed
@@ -44,8 +48,8 @@ class Food_v2(Food_v1):
 
         # 初始化位置
         self.rect.top = randint(10 , self.active_size[1] -20 )
-        self.rect.left = randint( self.active_size[0] * 7 , self.active_size[0] * 15)
+        self.rect.left = randint( self.active_size[0]  , self.active_size[0] * 15)
         
     def reset(self):
         self.rect.top = randint(10 , self.active_size[1] -20 )
-        self.rect.left = randint( self.active_size[0] * 7 , self.active_size[0] * 15)
+        self.rect.left = randint( self.active_size[0]  , self.active_size[0] * 15)

@@ -34,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= self.active_size[1] + 15:
             self.rect.bottom = self.active_size[1] +15
 
-    # 检测三个值是否满足游戏失败值，并进行边缘检测
+    # 检测三个值是否满足游戏失败值，并进行值的边缘检测
     def check_value(self):
         if self.inflamed_value <= 0 :
             self.inflamed_value = 0
