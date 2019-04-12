@@ -2,7 +2,7 @@ import pygame
 from random import  *
 
 class Food_v1(pygame.sprite.Sprite):
-    def __init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score ):
+    def __init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score ):
         pygame.sprite.Sprite.__init__(self)
 
         self.before_image = pygame.image.load(food_image).convert_alpha() # 导入图片
@@ -11,7 +11,7 @@ class Food_v1(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image) # 创建遮罩，检测碰撞用
 
         # 初始化速度，上火值，心情值，营养值，分数
-        self.speed = speed
+        self.speed = 4
         self.inflamed_value = inflamed_value
         self.mood_value = mood_value
         self.nutritional_value = nutritional_value
@@ -43,12 +43,15 @@ class Food_v1(pygame.sprite.Sprite):
         self.rect.left = randint( self.active_size[0] , self.active_size[0] * 8)
 
 class Food_v2(Food_v1):
-    def __init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score ):
-        Food_v1.__init__(self , active_size , food_image , speed , inflamed_value , mood_value , nutritional_value , score )
+    def __init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score ):
+        Food_v1.__init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score )
 
         # 初始化位置
         self.rect.top = randint(10 , self.active_size[1] -20 )
         self.rect.left = randint( self.active_size[0]  , self.active_size[0] * 15)
+
+        # 初始化速度
+        self.speed = 3
         
     def reset(self):
         self.rect.top = randint(10 , self.active_size[1] -20 )

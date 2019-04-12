@@ -34,14 +34,17 @@ while True:
         start_game_button.is_or_not_in_and_blit(screen)
 
         # 更新屏幕
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(10)
 
     
     # 初始化目标计时器，目标分数
     target_time ,  target_score= targets[target_level][0] , targets[target_level][1]
-    # 下一关开启界面只持续3秒钟，初始化时间
-    next_time = 0
+    # 下一关开启界面只持续5秒钟，显示“恭喜通关”时间3秒，显示关卡信息3秒
+    if target_level == 1:
+        next_time = 3
+    else :
+        next_time = 0
     # 下一关开启界面
     while next_level:
         for event in pygame.event.get():
@@ -54,10 +57,10 @@ while True:
                 if event.key == K_SPACE:
                     pause_status = not pause_status
                     
-            # 如果显示显示时间是否足够3秒
+            # 显示时间是否足够3秒
             if event.type == TIME:
                 if pause_status == False :
-                    if next_time == 3:
+                    if next_time  == 5:
                         start_game = True
                         next_level = False
                     else:
@@ -66,30 +69,46 @@ while True:
         # 绘制背景
         if target_level == 1:
             screen.blit(start_game_background_image , start_game_background_image_rect)
+        
+        
         # 绘制文字背景框
         screen.blit(text_background_image , text_background_image_rect)
-        # 绘制关卡提示文字
-        next_target_text = font_55.render('第 %d 关' % target_level , True , next_target_font_color)
-        next_target_text_rect = next_target_text.get_rect()
-        next_target_text_rect.center = text_background_image_rect.center[0] , \
-                                       text_background_image_rect.top + text_background_image_rect.height // 3
-        screen.blit(next_target_text , next_target_text_rect)
-        next_target_time_text = font_35.render('时间：%d' % (target_time ) , True , next_target_font_color)
-        next_target_time_text_rect = next_target_time_text.get_rect()
-        next_target_time_text_rect.center = text_background_image_rect.center[0] , \
-                                       text_background_image_rect.top + text_background_image_rect.height // 5 * 3
-        screen.blit(next_target_time_text , next_target_time_text_rect)
-        next_target_score_text = font_35.render('分数：%d' % (target_score ) , True , next_target_font_color)
-        next_target_score_text_rect = next_target_score_text.get_rect()
-        next_target_score_text_rect.center = text_background_image_rect.center[0] , \
-                                       text_background_image_rect.top + text_background_image_rect.height // 5 * 4
-        screen.blit(next_target_score_text , next_target_score_text_rect)
-        
 
-        # 绘制开始暂停按钮
+        # 绘制“恭喜通关”，并显示2秒后显示关卡信息
+        if target_level > 1 and (next_time  <= 2):
+            next_message_text = font_90.render('恭喜通关' , True , next_target_font_color)
+            next_message_text_rect = next_message_text.get_rect()
+            next_message_text_rect.center = text_background_image_rect.center
+            screen.blit(next_message_text , next_message_text_rect)
+        elif next_time  > 2:
+            # 绘制文字背景框
+            screen.blit(text_background_image , text_background_image_rect)
+            
+            # 绘制关卡提示文字
+            next_target_text = font_55.render('第 %d 关' % target_level , True , next_target_font_color)
+            next_target_text_rect = next_target_text.get_rect()
+            next_target_text_rect.center = text_background_image_rect.center[0] , \
+                                           text_background_image_rect.top + text_background_image_rect.height // 3
+            screen.blit(next_target_text , next_target_text_rect)
+            next_target_time_text = font_35.render('时间：%d' % (target_time ) , True , next_target_font_color)
+            next_target_time_text_rect = next_target_time_text.get_rect()
+            next_target_time_text_rect.center = text_background_image_rect.center[0] , \
+                                           text_background_image_rect.top + text_background_image_rect.height // 5 * 3
+            screen.blit(next_target_time_text , next_target_time_text_rect)
+            next_target_score_text = font_35.render('分数：%d' % (target_score ) , True , next_target_font_color)
+            next_target_score_text_rect = next_target_score_text.get_rect()
+            next_target_score_text_rect.center = text_background_image_rect.center[0] , \
+                                           text_background_image_rect.top + text_background_image_rect.height // 5 * 4
+            screen.blit(next_target_score_text , next_target_score_text_rect)
+        
+        
+        # 绘制开始暂停按钮,空格文字图片
         unpause_and_pause_button_image_rect.centery = screen_size_height - \
                                                       (screen_size_height - screen_active_size[1]) // 2
         unpause_and_pause_button_image_rect.right = screen_size_width - 10
+        space_text_image_rect.right = unpause_and_pause_button_image_rect.left
+        space_text_image_rect.top = unpause_and_pause_button_image_rect.top
+        screen.blit(space_text_image , space_text_image_rect)
         if pause_status :
             screen.blit(pause_button_image , unpause_and_pause_button_image_rect)
         else :
@@ -163,7 +182,7 @@ while True:
         
         # 绘制上火条 ， 以下代码是找适当的位置放条
         # 绘制”上火“
-        inflamed_value_bar_text = status_bar_font.render('上火' , True , status_bar_font_color)
+        inflamed_value_bar_text = font_15.render('上火' , True , status_bar_font_color)
         inflamed_value_bar_text_rect = inflamed_value_bar_text.get_rect()
         inflamed_value_bar_text_rect.center = (screen_size_width / 18 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(inflamed_value_bar_text ,  inflamed_value_bar_text_rect)
@@ -177,7 +196,7 @@ while True:
         r_i = pygame.draw.rect(screen , status_bar_font_color , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
                                            inflamed_value_bar_text_rect.top  , 100 , inflamed_value_bar_text_rect.height   ) , 1)
         # 绘制血条数字     
-        inflamed_value_bar_num_text = status_bar_font.render(str(player.inflamed_value), True , status_bar_font_color)
+        inflamed_value_bar_num_text = font_15.render(str(player.inflamed_value), True , status_bar_font_color)
         inflamed_value_bar_num_text_rect = inflamed_value_bar_num_text.get_rect()
         inflamed_value_bar_num_text_rect.topleft =  r_i.right + 2 , inflamed_value_bar_text_rect.top 
         screen.blit(inflamed_value_bar_num_text , inflamed_value_bar_num_text_rect)
@@ -185,7 +204,7 @@ while True:
         
         # 绘制心情条
         # 绘制”心情“
-        mood_value_bar_text = status_bar_font.render('心情' , True , status_bar_font_color)
+        mood_value_bar_text = font_15.render('心情' , True , status_bar_font_color)
         mood_value_bar_text_rect = mood_value_bar_text.get_rect()
         mood_value_bar_text_rect.center = (screen_size_width / 18 * 5 +5 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(mood_value_bar_text ,  mood_value_bar_text_rect)
@@ -199,14 +218,14 @@ while True:
         r_m = pygame.draw.rect(screen , status_bar_font_color , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
                                            mood_value_bar_text_rect.top  , 100 , mood_value_bar_text_rect.height   ) , 1)
         # 绘制血条数字     
-        mood_value_bar_num_text = status_bar_font.render(str(player.mood_value), True , status_bar_font_color)
+        mood_value_bar_num_text = font_15.render(str(player.mood_value), True , status_bar_font_color)
         mood_value_bar_num_text_rect = mood_value_bar_num_text.get_rect()
         mood_value_bar_num_text_rect.topleft =  r_m.right + 2 , mood_value_bar_text_rect.top 
         screen.blit(mood_value_bar_num_text , mood_value_bar_num_text_rect)
 
         # 绘制营养条
         # 绘制”营养“
-        nutritional_value_bar_text = status_bar_font.render('营养' , True , status_bar_font_color)
+        nutritional_value_bar_text = font_15.render('营养' , True , status_bar_font_color)
         nutritional_value_bar_text_rect = nutritional_value_bar_text.get_rect()
         nutritional_value_bar_text_rect.center = (screen_size_width / 18 * 9 +10 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(nutritional_value_bar_text ,  nutritional_value_bar_text_rect)
@@ -220,25 +239,28 @@ while True:
         r_n = pygame.draw.rect(screen , status_bar_font_color , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
                                            nutritional_value_bar_text_rect.top  , 100 , nutritional_value_bar_text_rect.height   ) , 1)
         # 绘制血条数字     
-        nutritional_value_bar_num_text = status_bar_font.render(str(player.nutritional_value), True , status_bar_font_color)
+        nutritional_value_bar_num_text = font_15.render(str(player.nutritional_value), True , status_bar_font_color)
         nutritional_value_bar_num_text_rect = nutritional_value_bar_num_text.get_rect()
         nutritional_value_bar_num_text_rect.topleft =  r_n.right + 2 , nutritional_value_bar_text_rect.top 
         screen.blit(nutritional_value_bar_num_text , nutritional_value_bar_num_text_rect)
 
         # 绘制分数条
-        score_text = status_bar_font.render('分数：'+str(player.score) , True , status_bar_font_color)
+        score_text = font_15.render('分数：'+str(player.score) , True , status_bar_font_color)
         screen.blit(score_text , (screen_size_width / 18 * 13 + 10, nutritional_value_bar_text_rect.top ))
 
         # 绘制目标分数，倒计时
-        target_text = target_font.render('目标分数：%d  倒计时：%d' % (target_score , target_time) , True , status_bar_font_color)
+        target_text = font_20.render('目标分数：%d  倒计时：%d' % (target_score , target_time) , True , status_bar_font_color)
         target_text_rect = target_text.get_rect()
         target_text_rect.topleft= screen_size_width - target_text_rect.width -10 , 10
         screen.blit(target_text , target_text_rect)
 
-        # 绘制开始暂停按钮
+        # 绘制开始暂停按钮,空格文字图片
         unpause_and_pause_button_image_rect.centery = screen_size_height - \
                                                       (screen_size_height - screen_active_size[1]) // 2
         unpause_and_pause_button_image_rect.right = screen_size_width - 10
+        space_text_image_rect.right = unpause_and_pause_button_image_rect.left
+        space_text_image_rect.top = unpause_and_pause_button_image_rect.top
+        screen.blit(space_text_image , space_text_image_rect)
         if pause_status :
             screen.blit(pause_button_image , unpause_and_pause_button_image_rect)
         else :
@@ -248,14 +270,28 @@ while True:
         if player.score >= 25 and food_level == 1:
             food_level = 2
             # 创建初始v2食物，每种3个
-            for food_name , food_speed , food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+            for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
                           in food_v2 :
                 for i in range(3):
                     food = Food_v2(screen_active_size ,  \
-                                       food_name , food_speed , food_inflamed_value , \
+                                       food_name , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)
 
         # 更新屏幕
         pygame.display.update()
         clock.tick(60)
+
+    # 游戏结束界面
+    while game_over :
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # 绘制失败文字图片
+        screen.blit(defeat_image , defeat_image_rect)
+
+        # 更新屏幕
+        pygame.display.update()
+        clock.tick(10)
