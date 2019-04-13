@@ -4,6 +4,8 @@ from button import *
 from food import *
 from player import *
 from random import *
+from loser import *
+from defeat_beacuse_text_image import *
 
 # 初始化
 pygame.init()
@@ -28,11 +30,15 @@ RED = 255 , 0 , 0
 status_bar_font_color = BLACK
 next_target_font_color = BLACK
 
+
 # 导入图片
 game_menu_background_image = pygame.image.load('images/game_menu_background.jpg')
 game_menu_background_image_rect = game_menu_background_image.get_rect()
 start_game_background_image = pygame.image.load('images/start_game_background.png').convert_alpha()
 start_game_background_image_rect = start_game_background_image.get_rect()
+copy_little_image = start_game_background_image .subsurface(740,550,60,50) # 用于填补右下角暂停按钮的背景
+copy_little_image_rect = copy_little_image.get_rect()
+copy_little_image_rect.bottomright = screen_size_width , screen_size_height
 text_background_image = pygame.image.load('images/text_background.png').convert_alpha()
 text_background_image_rect = text_background_image.get_rect()
 text_background_image_rect.center = start_game_background_image_rect.center
@@ -45,6 +51,14 @@ defeat_image = pygame.image.load('images/defeat.png').convert_alpha()
 defeat_image_rect = defeat_image.get_rect()
 defeat_image_rect.centerx = screen_size_width // 2
 defeat_image_rect.top = screen_size_height //10
+
+# 创建失败者loser类
+loser = Loser()
+loser.rect.centerx = screen_size_width // 2
+loser.rect.top = screen_size_height //10 * 2 -10
+
+# 创建失败原因文字图片类
+defeat_beacuse_text = Defeat_Beacuse_Text_Image(screen_size_width , loser.rect.bottom)
 
 # 定义字体
 button_font = pygame.font.Font('font/font.ttf' , 40)
@@ -78,6 +92,9 @@ food_v3_path = 'images/food/v3/'
 # 自定义事件：心情值，营养值随时间每一秒减少
 TIME = USEREVENT
 pygame.time.set_timer(TIME , 1 * 1000)
+# 自定义事件：每过0.01秒更新loser图片
+UPDATE_LOSER_TIME = USEREVENT + 1
+pygame.time.set_timer(UPDATE_LOSER_TIME ,  10)
 
 # 目标时间以及目标分数
 targets = {1:[30,25] ,
@@ -101,3 +118,5 @@ for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value 
 # 初始化级别
 food_level = 1
 target_level = 1
+
+

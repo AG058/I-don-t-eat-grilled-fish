@@ -101,6 +101,8 @@ while True:
                                            text_background_image_rect.top + text_background_image_rect.height // 5 * 4
             screen.blit(next_target_score_text , next_target_score_text_rect)
         
+        # 绘制按钮地区的背景，防止按钮重叠
+        screen.blit(copy_little_image , copy_little_image_rect)
         
         # 绘制开始暂停按钮,空格文字图片
         unpause_and_pause_button_image_rect.centery = screen_size_height - \
@@ -134,7 +136,7 @@ while True:
             if event.type == TIME:
                 if pause_status == False:
                     player.mood_value -= 2
-                    player.nutritional_value -= 3
+                    player.nutritional_value -= 3         
                     target_time -= 1
                     if target_time <= 0 : # 倒计时结束
                         if player.score >= target_score : # 玩家分数达到目标分数
@@ -148,24 +150,6 @@ while True:
                 
         # 绘制背景
         screen.blit(start_game_background_image , start_game_background_image_rect)
-
-        # 判断是否碰撞
-        player_food_collide = pygame.sprite.spritecollide(player , food_group , False , pygame.sprite.collide_circle)
-        if player_food_collide:
-            for each in player_food_collide:
-                player.inflamed_value += each.inflamed_value
-                player.mood_value += each.mood_value
-                player.nutritional_value += each.nutritional_value
-                player.score += each.score
-
-                # 检测三个值是否满足游戏失败值
-                player.check_value()
-                if player.inflamed_value_status or player.mood_value_status or player.nutritional_value_status:
-                    game_over = True
-                    start_game = False
-                    break
-                
-                each.reset()
                 
         # 绘制玩家
         if pause_status == False:
@@ -179,7 +163,17 @@ while True:
         for each in food_group:
             screen.blit(each.image , each.rect)
 
-        
+        # 判断是否碰撞
+        player_food_collide = pygame.sprite.spritecollide(player , food_group , False , pygame.sprite.collide_circle)
+        if player_food_collide:
+            for each in player_food_collide:
+                player.inflamed_value += each.inflamed_value
+                player.mood_value += each.mood_value
+                player.nutritional_value += each.nutritional_value
+                player.score += each.score
+                
+                each.reset()
+                
         # 绘制上火条 ， 以下代码是找适当的位置放条
         # 绘制”上火“
         inflamed_value_bar_text = font_15.render('上火' , True , status_bar_font_color)
@@ -187,7 +181,7 @@ while True:
         inflamed_value_bar_text_rect.center = (screen_size_width / 18 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(inflamed_value_bar_text ,  inflamed_value_bar_text_rect)
         # 绘制血条
-        if player.inflamed_value < 80 :
+        if 0 <= player.inflamed_value < 80 :
             pygame.draw.rect(screen , GREEN , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
                                            inflamed_value_bar_text_rect.top  , player.inflamed_value , inflamed_value_bar_text_rect.height   ) )
         elif 80 <= player.inflamed_value <= 100 :
@@ -195,7 +189,8 @@ while True:
                                            inflamed_value_bar_text_rect.top  , player.inflamed_value , inflamed_value_bar_text_rect.height   ) )
         r_i = pygame.draw.rect(screen , status_bar_font_color , (inflamed_value_bar_text_rect.left + inflamed_value_bar_text_rect.width +10 ,\
                                            inflamed_value_bar_text_rect.top  , 100 , inflamed_value_bar_text_rect.height   ) , 1)
-        # 绘制血条数字     
+        # 绘制血条数字
+        player.check_value()
         inflamed_value_bar_num_text = font_15.render(str(player.inflamed_value), True , status_bar_font_color)
         inflamed_value_bar_num_text_rect = inflamed_value_bar_num_text.get_rect()
         inflamed_value_bar_num_text_rect.topleft =  r_i.right + 2 , inflamed_value_bar_text_rect.top 
@@ -209,7 +204,7 @@ while True:
         mood_value_bar_text_rect.center = (screen_size_width / 18 * 5 +5 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(mood_value_bar_text ,  mood_value_bar_text_rect)
         # 绘制血条
-        if player.mood_value < 20 :
+        if 0 <= player.mood_value < 20 :
             pygame.draw.rect(screen , RED , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
                                            mood_value_bar_text_rect.top  , player.mood_value , mood_value_bar_text_rect.height   ) )
         elif 20 <= player.mood_value <= 100 :
@@ -217,7 +212,8 @@ while True:
                                            mood_value_bar_text_rect.top  , player.mood_value , mood_value_bar_text_rect.height   ) )
         r_m = pygame.draw.rect(screen , status_bar_font_color , (mood_value_bar_text_rect.left + mood_value_bar_text_rect.width +10 ,\
                                            mood_value_bar_text_rect.top  , 100 , mood_value_bar_text_rect.height   ) , 1)
-        # 绘制血条数字     
+        # 绘制血条数字
+        player.check_value()
         mood_value_bar_num_text = font_15.render(str(player.mood_value), True , status_bar_font_color)
         mood_value_bar_num_text_rect = mood_value_bar_num_text.get_rect()
         mood_value_bar_num_text_rect.topleft =  r_m.right + 2 , mood_value_bar_text_rect.top 
@@ -230,20 +226,21 @@ while True:
         nutritional_value_bar_text_rect.center = (screen_size_width / 18 * 9 +10 , screen_active_size[1] + (screen_size_height - screen_active_size[1]) // 2 )
         screen.blit(nutritional_value_bar_text ,  nutritional_value_bar_text_rect)
         # 绘制血条
-        if player.nutritional_value < 20 :
+        if (0 <= player.nutritional_value < 15) or (85 < player.nutritional_value <= 100)  :
             pygame.draw.rect(screen , RED , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
                                            nutritional_value_bar_text_rect.top  , player.nutritional_value , nutritional_value_bar_text_rect.height   ) )
-        elif 20 <= player.nutritional_value<= 100 :
+        elif 15 <= player.nutritional_value<= 85 :
             pygame.draw.rect(screen , GREEN , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
                                            nutritional_value_bar_text_rect.top  , player.nutritional_value , nutritional_value_bar_text_rect.height   ) )
         r_n = pygame.draw.rect(screen , status_bar_font_color , (nutritional_value_bar_text_rect.left + nutritional_value_bar_text_rect.width +10 ,\
                                            nutritional_value_bar_text_rect.top  , 100 , nutritional_value_bar_text_rect.height   ) , 1)
-        # 绘制血条数字     
+        # 绘制血条数字
+        player.check_value()
         nutritional_value_bar_num_text = font_15.render(str(player.nutritional_value), True , status_bar_font_color)
         nutritional_value_bar_num_text_rect = nutritional_value_bar_num_text.get_rect()
         nutritional_value_bar_num_text_rect.topleft =  r_n.right + 2 , nutritional_value_bar_text_rect.top 
         screen.blit(nutritional_value_bar_num_text , nutritional_value_bar_num_text_rect)
-
+        
         # 绘制分数条
         score_text = font_15.render('分数：'+str(player.score) , True , status_bar_font_color)
         screen.blit(score_text , (screen_size_width / 18 * 13 + 10, nutritional_value_bar_text_rect.top ))
@@ -277,11 +274,19 @@ while True:
                                        food_name , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)
+                    
 
+        # 检测三个值是否满足游戏失败值     
+        if player.inflamed_value_status or player.mood_value_status or player.nutritional_value_status:
+            game_over = True
+            start_game = False
+            break
+        
         # 更新屏幕
         pygame.display.update()
         clock.tick(60)
 
+    delay = 0
     # 游戏结束界面
     while game_over :
         for event in pygame.event.get():
@@ -289,9 +294,24 @@ while True:
                 pygame.quit()
                 sys.exit()
 
+            if event.type == UPDATE_LOSER_TIME :
+                loser.update()
+
         # 绘制失败文字图片
         screen.blit(defeat_image , defeat_image_rect)
-
+        
+        if delay >= 10:
+            # 绘制失败者loser
+            screen.blit(loser.image , loser.rect)
+            
+        if delay >=20:
+            # 绘制失败原因
+            defeat_beacuse_text.check(game_over_because_score , player.inflamed_value_status , player.mood_value_status , player.nutritional_value_status )
+            screen.blit(defeat_beacuse_text.image , defeat_beacuse_text.rect)
+            delay = 20
+            
+        if delay< 20:
+            delay +=1
         # 更新屏幕
         pygame.display.update()
         clock.tick(10)

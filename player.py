@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         # 初始化上火值，心情值，营养值，分数
         self.inflamed_value = 0
         self.mood_value = 100
-        self.nutritional_value = 100
+        self.nutritional_value = 50
         self.score = 0
 
         # 初始化半径
@@ -51,6 +51,7 @@ class Player(pygame.sprite.Sprite):
             self.nutritional_value_status = True
         if self.nutritional_value >= 100 :
             self.nutritional_value = 100
-            
+            self.nutritional_value_status = True
+
     
     
