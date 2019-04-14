@@ -20,6 +20,10 @@ pygame.display.set_caption('游戏标题')
 # 定义游戏活动大小
 screen_active_size = 800 , 550
 
+# 定义 icon
+icon_image = pygame.image.load('images/ico .ico').convert_alpha()
+pygame.display.set_icon(icon_image)
+
 # 定义颜色
 BLACK = 0 , 0 , 0
 GRAY_0 = 50 , 50 ,50
