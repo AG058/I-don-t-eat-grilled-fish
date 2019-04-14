@@ -6,6 +6,7 @@ game_over = False
 game_over_because_score = False # 录由于分数未达到导致失败
 next_level = False  # 下一关界面开启
 pause_status = False # 初始化暂停为false
+game_init = False # 重新开始游戏初始化
 clock = pygame.time.Clock()
 
 while True:
@@ -20,9 +21,8 @@ while True:
 
             # 判断开始游戏按钮是否被按下
             if event.type == MOUSEBUTTONDOWN:
-                temp = start_game_button.is_or_not_press()
-                if temp :
-                    next_level = True
+                if start_game_button.is_or_not_press() :
+                    game_init= True
                     game_menu = False
                     break
                 
@@ -37,6 +37,37 @@ while True:
         pygame.display.flip()
         clock.tick(10)
 
+    if game_init:
+        # 初始化级别
+        food_level = 1
+        target_level = 1
+
+        # 导入玩家
+        player = Player('images/player.png',screen_active_size)
+
+        # 创建食物组
+        food_group = pygame.sprite.Group()
+
+        # 创建初始v1食物，每种4个
+        for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+                      in food_v1 :
+            for i in range(4):
+                food = Food_v1(screen_active_size ,  \
+                                   food_name ,  food_inflamed_value , \
+                                   food_mood_value , food_nutritional_value , food_score )
+                food_group.add(food)
+
+        game_menu = False
+        start_game = False
+        game_over = False
+        game_over_because_score = False # 录由于分数未达到导致失败
+        next_level = True  # 下一关界面开启
+        pause_status = False # 初始化暂停为false
+        game_init = False # 重新开始游戏初始化
+
+        # 初始化
+        pygame.init()
+        pygame.mixer.init()
     
     # 初始化目标计时器，目标分数
     target_time ,  target_score= targets[target_level][0] , targets[target_level][1]
@@ -297,6 +328,18 @@ while True:
             if event.type == UPDATE_LOSER_TIME :
                 loser.update()
 
+            # 判断返回菜单按钮是否被按下
+            if event.type == MOUSEBUTTONDOWN:
+                if return_menu_button.is_or_not_press() :
+                    game_menu = True
+                    game_over = False
+
+            # 判断重新开始按钮是否被按下
+            if event.type == MOUSEBUTTONDOWN:
+                if restart_button.is_or_not_press() :
+                    game_init = True
+                    game_over = False                   
+
         # 绘制失败文字图片
         screen.blit(defeat_image , defeat_image_rect)
         
@@ -308,10 +351,39 @@ while True:
             # 绘制失败原因
             defeat_beacuse_text.check(game_over_because_score , player.inflamed_value_status , player.mood_value_status , player.nutritional_value_status )
             screen.blit(defeat_beacuse_text.image , defeat_beacuse_text.rect)
-            delay = 20
+
+        if delay >=30:
+            # 绘制返回菜单，重新开始按钮
+            return_menu_button.rect.top = defeat_beacuse_text.rect.bottom +10
+            return_menu_button.rect.right = screen_size_width // 2 - 10
+            return_menu_button.is_or_not_in_and_blit(screen)
+            restart_button.rect.top = defeat_beacuse_text.rect.bottom +10
+            restart_button.rect.left= screen_size_width // 2 + 10
+            restart_button.is_or_not_in_and_blit(screen)
+
+            # 绘制历史分数当前分数
+            with open('score.txt' , 'r') as f :
+                history_score = int(f.read())
+            if history_score < player.score :
+                history_score = player.score
+                with open('score.txt' , 'w') as f :
+                    f.write(str(history_score))
+            history_score_and_score_text = font_20.render('历史最高分：%d  您的分数： %d'%(history_score , player.score) ,\
+                                                          True , BLACK)
+            history_score_and_score_text_rect = history_score_and_score_text.get_rect()
+            history_score_and_score_text_rect.centerx = screen_size_width // 2
+            history_score_and_score_text_rect.top = restart_button.rect.bottom + 10
+            screen.blit(history_score_and_score_text , history_score_and_score_text_rect)
+            delay = 30
             
-        if delay< 20:
+        if delay < 3 :
+            screen.blit(defeat_bg_image , defeat_bg_image_rect)
+            
+        if delay< 30:
             delay +=1
+
         # 更新屏幕
         pygame.display.update()
         clock.tick(10)
+        
+

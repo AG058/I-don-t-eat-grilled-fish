@@ -6,7 +6,7 @@ from player import *
 from random import *
 from loser import *
 from defeat_beacuse_text_image import *
-
+    
 # 初始化
 pygame.init()
 pygame.mixer.init()
@@ -27,6 +27,7 @@ GRAY_1 = 150,150,150
 GRAY_2 = 170 , 170 , 170
 GREEN = 0 , 255 , 0
 RED = 255 , 0 , 0
+GRAY_3 = 100 , 100 , 100
 status_bar_font_color = BLACK
 next_target_font_color = BLACK
 
@@ -50,18 +51,20 @@ unpause_and_pause_button_image_rect = unpause_button_image.get_rect()
 defeat_image = pygame.image.load('images/defeat.png').convert_alpha()
 defeat_image_rect = defeat_image.get_rect()
 defeat_image_rect.centerx = screen_size_width // 2
-defeat_image_rect.top = screen_size_height //10
+defeat_image_rect.top = screen_size_height // 12
+defeat_bg_image = pygame.image.load('images/defeat_bg.png').convert_alpha()
+defeat_bg_image_rect = defeat_bg_image.get_rect()
 
 # 创建失败者loser类
 loser = Loser()
 loser.rect.centerx = screen_size_width // 2
-loser.rect.top = screen_size_height //10 * 2 -10
+loser.rect.top = screen_size_height //12* 2 -10
 
 # 创建失败原因文字图片类
 defeat_beacuse_text = Defeat_Beacuse_Text_Image(screen_size_width , loser.rect.bottom)
 
 # 定义字体
-button_font = pygame.font.Font('font/font.ttf' , 40)
+font_40 = pygame.font.Font('font/font.ttf' , 40)
 font_15 = pygame.font.Font('font/font.ttf' , 15)
 font_20 = pygame.font.Font('font/font.ttf' , 20)
 font_55 =  pygame.font.Font('font/font.ttf' , 55)
@@ -69,8 +72,11 @@ font_35 = pygame.font.Font('font/font.ttf' , 35)
 font_90 = pygame.font.Font('font/font.ttf' , 90)
 
 # 定义游戏界面按钮
-start_game_button = TextButton(button_font ,' 开  始  游  戏' , BLACK , GRAY_1 , (400 , 500) )
-
+start_game_button = TextButton(font_40 ,' 开  始  游  戏' , BLACK , GRAY_1 )
+start_game_button.rect.center = (400 , 500)
+# 定义游戏结束界面返回菜单和重新开始按钮
+return_menu_button = TextButton(font_40 ,' 返回菜单'  , BLACK ,  GRAY_0)
+restart_button = TextButton(font_40 ,' 重新开始' , BLACK,  GRAY_0 )
 
 # 食物名称，上火值，心情值，营养值，分数
 food_v1_path = 'images/food/v1/'
@@ -100,23 +106,7 @@ pygame.time.set_timer(UPDATE_LOSER_TIME ,  10)
 targets = {1:[30,25] ,
            2:[40,125]}
 
-# 导入玩家
-player = Player('images/player.png',screen_active_size)
 
-# 创建食物组
-food_group = pygame.sprite.Group()
 
-# 创建初始v1食物，每种4个
-for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
-              in food_v1 :
-    for i in range(4):
-        food = Food_v1(screen_active_size ,  \
-                           food_name ,  food_inflamed_value , \
-                           food_mood_value , food_nutritional_value , food_score )
-        food_group.add(food)
-
-# 初始化级别
-food_level = 1
-target_level = 1
 
 

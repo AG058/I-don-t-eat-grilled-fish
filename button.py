@@ -2,13 +2,12 @@ import pygame
 
 # 文字按钮
 class TextButton(pygame.sprite.Sprite):
-    def __init__(self , font , text , unpress_color , press_color , position):
+    def __init__(self , font , text , unpress_color , press_color ):
         pygame.sprite.Sprite.__init__(self)
         
         self.unpress = font.render(text , True , unpress_color)
         self.press = font.render(text , True , press_color)
         self.rect = self.unpress.get_rect()
-        self.rect.center = position
         self.state = False
 
     # 判断鼠标位置是否在按钮上，并且绘制相应按钮样式
