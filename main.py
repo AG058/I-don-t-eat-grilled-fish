@@ -27,8 +27,7 @@ while True:
                     break
                 
         # 绘制背景
-        # screen.blit(game_menu_background_image , game_menu_background_image_rect)
-        screen.fill((255 , 255 , 255))
+        screen.blit(game_menu_background_image , game_menu_background_image_rect)
         
         # 绘制界面文字按钮
         start_game_button.is_or_not_in_and_blit(screen)
@@ -114,23 +113,40 @@ while True:
         elif next_time  > 2:
             # 绘制文字背景框
             screen.blit(text_background_image , text_background_image_rect)
-            
-            # 绘制关卡提示文字
-            next_target_text = font_55.render('第 %d 关' % target_level , True , next_target_font_color)
-            next_target_text_rect = next_target_text.get_rect()
-            next_target_text_rect.center = text_background_image_rect.center[0] , \
-                                           text_background_image_rect.top + text_background_image_rect.height // 3
-            screen.blit(next_target_text , next_target_text_rect)
-            next_target_time_text = font_35.render('时间：%d' % (target_time ) , True , next_target_font_color)
-            next_target_time_text_rect = next_target_time_text.get_rect()
-            next_target_time_text_rect.center = text_background_image_rect.center[0] , \
-                                           text_background_image_rect.top + text_background_image_rect.height // 5 * 3
-            screen.blit(next_target_time_text , next_target_time_text_rect)
-            next_target_score_text = font_35.render('分数：%d' % (target_score ) , True , next_target_font_color)
-            next_target_score_text_rect = next_target_score_text.get_rect()
-            next_target_score_text_rect.center = text_background_image_rect.center[0] , \
-                                           text_background_image_rect.top + text_background_image_rect.height // 5 * 4
-            screen.blit(next_target_score_text , next_target_score_text_rect)
+            if target_level < target_level_max :
+                # 绘制关卡提示文字
+                next_target_text = font_55.render('第 %d 关' % target_level , True , next_target_font_color)
+                next_target_text_rect = next_target_text.get_rect()
+                next_target_text_rect.center = text_background_image_rect.center[0] , \
+                                               text_background_image_rect.top + text_background_image_rect.height // 3
+                screen.blit(next_target_text , next_target_text_rect)
+                next_target_time_text = font_35.render('时间：%d' % (target_time ) , True , next_target_font_color)
+                next_target_time_text_rect = next_target_time_text.get_rect()
+                next_target_time_text_rect.center = text_background_image_rect.center[0] , \
+                                               text_background_image_rect.top + text_background_image_rect.height // 5 * 3
+                screen.blit(next_target_time_text , next_target_time_text_rect)
+                next_target_score_text = font_35.render('分数：%d' % (target_score ) , True , next_target_font_color)
+                next_target_score_text_rect = next_target_score_text.get_rect()
+                next_target_score_text_rect.center = text_background_image_rect.center[0] , \
+                                               text_background_image_rect.top + text_background_image_rect.height // 5 * 4
+                screen.blit(next_target_score_text , next_target_score_text_rect)
+            elif target_level == target_level_max :
+                 # 绘制关卡提示文字
+                next_target_text = font_55.render('第 %d 关  无限关' % target_level , True , next_target_font_color)
+                next_target_text_rect = next_target_text.get_rect()
+                next_target_text_rect.center = text_background_image_rect.center[0] , \
+                                               text_background_image_rect.top + text_background_image_rect.height // 3
+                screen.blit(next_target_text , next_target_text_rect)
+                next_target_time_text = font_35.render('时间：%s' % (target_time ) , True , next_target_font_color)
+                next_target_time_text_rect = next_target_time_text.get_rect()
+                next_target_time_text_rect.center = text_background_image_rect.center[0] , \
+                                               text_background_image_rect.top + text_background_image_rect.height // 5 * 3
+                screen.blit(next_target_time_text , next_target_time_text_rect)
+                next_target_score_text = font_35.render('分数：%s' % (target_score ) , True , next_target_font_color)
+                next_target_score_text_rect = next_target_score_text.get_rect()
+                next_target_score_text_rect.center = text_background_image_rect.center[0] , \
+                                               text_background_image_rect.top + text_background_image_rect.height // 5 * 4
+                screen.blit(next_target_score_text , next_target_score_text_rect)
         
         # 绘制按钮地区的背景，防止按钮重叠
         screen.blit(copy_little_image , copy_little_image_rect)
@@ -168,16 +184,17 @@ while True:
                 if pause_status == False:
                     player.mood_value -= 2
                     player.nutritional_value -= 3         
-                    target_time -= 1
-                    if target_time <= 0 : # 倒计时结束
-                        if player.score >= target_score : # 玩家分数达到目标分数
-                            next_level = True # 下一关界面开启
-                            target_level += 1
-                            start_game = False
-                        else :
-                            game_over_because_score = True # 记录由于分数未达到导致失败
-                            game_over = True
-                            start_game = False
+                    if target_level < target_level_max :
+                        target_time -= 1
+                        if target_time <= 0 : # 倒计时结束
+                            if player.score >= target_score : # 玩家分数达到目标分数
+                                next_level = True # 下一关界面开启
+                                target_level += 1
+                                start_game = False
+                            else :
+                                game_over_because_score = True # 记录由于分数未达到导致失败
+                                game_over = True
+                                start_game = False
                 
         # 绘制背景
         screen.blit(start_game_background_image , start_game_background_image_rect)
@@ -277,7 +294,10 @@ while True:
         screen.blit(score_text , (screen_size_width / 18 * 13 + 10, nutritional_value_bar_text_rect.top ))
 
         # 绘制目标分数，倒计时
-        target_text = font_20.render('目标分数：%d  倒计时：%d' % (target_score , target_time) , True , status_bar_font_color)
+        if target_level < target_level_max:
+            target_text = font_20.render('目标分数：%d  倒计时：%d' % (target_score , target_time) , True , status_bar_font_color)
+        else :
+            target_text = font_20.render('目标分数：%s  倒计时：%s' % (target_score , target_time) , True , status_bar_font_color)
         target_text_rect = target_text.get_rect()
         target_text_rect.topleft= screen_size_width - target_text_rect.width -10 , 10
         screen.blit(target_text , target_text_rect)
@@ -305,7 +325,36 @@ while True:
                                        food_name , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)
-                    
+        if player.score >= 100 and food_level == 2:
+            food_level = 3
+             # 创建初始v3食物，每种3个
+            for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+                          in food_v3 :
+                for i in range(3):
+                    food = Food_v3(screen_active_size ,  \
+                                       food_name , food_inflamed_value , \
+                                       food_mood_value , food_nutritional_value , food_score )
+                    food_group.add(food)
+        if player.score >= 250 and food_level == 3:
+            food_level = 4
+             # 创建初始v4食物，每种3个
+            for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+                          in food_v4 :
+                for i in range(3):
+                    food = Food_v4(screen_active_size ,  \
+                                       food_name , food_inflamed_value , \
+                                       food_mood_value , food_nutritional_value , food_score )
+                    food_group.add(food)
+        if player.score >= 450 and food_level == 4:
+            food_level = 5
+             # 创建初始v5食物，每种3个
+            for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+                          in food_v4 :
+                for i in range(3):
+                    food = Food_v4(screen_active_size ,  \
+                                       food_name , food_inflamed_value , \
+                                       food_mood_value , food_nutritional_value , food_score )
+                    food_group.add(food)   
 
         # 检测三个值是否满足游戏失败值     
         if player.inflamed_value_status or player.mood_value_status or player.nutritional_value_status:

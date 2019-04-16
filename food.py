@@ -48,11 +48,56 @@ class Food_v2(Food_v1):
 
         # 初始化位置
         self.rect.top = randint(10 , self.active_size[1] -20 )
-        self.rect.left = randint( self.active_size[0]  , self.active_size[0] * 15)
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 18 )
 
         # 初始化速度
         self.speed = 3
         
     def reset(self):
         self.rect.top = randint(10 , self.active_size[1] -20 )
-        self.rect.left = randint( self.active_size[0]  , self.active_size[0] * 15)
+        self.rect.left = randint( self.active_size[0]  , self.active_size[0] * 18)
+
+class Food_v3(Food_v1):
+    def __init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score ):
+        Food_v1.__init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score )
+
+        # 初始化位置
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 30)
+
+        # 初始化速度
+        self.speed = 3
+        
+    def reset(self):
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 30)
+
+class Food_v4(Food_v1):
+    def __init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score ):
+        Food_v1.__init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score )
+
+        # 初始化位置
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 40)
+
+        # 初始化速度
+        self.speed = 2
+        
+    def reset(self):
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 40)
+
+class Food_v5(Food_v1):
+    def __init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score ):
+        Food_v1.__init__(self , active_size , food_image , inflamed_value , mood_value , nutritional_value , score )
+
+        # 初始化位置
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 60)
+
+        # 初始化速度
+        self.speed = 2
+        
+    def reset(self):
+        self.rect.top = randint(10 , self.active_size[1] -20 )
+        self.rect.left = randint( self.active_size[0]   , self.active_size[0] * 60)

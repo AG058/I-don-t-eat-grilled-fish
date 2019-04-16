@@ -37,7 +37,7 @@ next_target_font_color = BLACK
 
 
 # 导入图片
-game_menu_background_image = pygame.image.load('images/game_menu_background.jpg')
+game_menu_background_image = pygame.image.load('images/game_menu_background.png')
 game_menu_background_image_rect = game_menu_background_image.get_rect()
 start_game_background_image = pygame.image.load('images/start_game_background.png').convert_alpha()
 start_game_background_image_rect = start_game_background_image.get_rect()
@@ -84,20 +84,38 @@ restart_button = TextButton(font_40 ,' 重新开始' , BLACK,  GRAY_0 )
 
 # 食物名称，上火值，心情值，营养值，分数
 food_v1_path = 'images/food/v1/'
-food_v1 = [ [food_v1_path+'apple.png',-2,5,5,3] ,
-            [food_v1_path+'milk.png',3,10,5,4],
-           [food_v1_path+'rice.png' , -3 , 5, 10 , 3] ,
-            [food_v1_path+'pear.png',-5,5,5,3],
-           [food_v1_path+'rice_ball.png' , -3 , 7 , 10 , 3]]
+food_v1 = [ [food_v1_path+'apple.png',-2,3,5,3] ,
+            [food_v1_path+'milk.png',3,4,5,4],
+           [food_v1_path+'rice.png' , -3 , 3, 5 , 3] ,
+            [food_v1_path+'pear.png',-3,3,5,3],
+           [food_v1_path+'rice_ball.png' , -3 , 3 , 5 , 3]]
 food_v2_path = 'images/food/v2/'
-food_v2 = [ [food_v2_path + 'bagel.png' , 8 , 20 , 15 , 8] ,
-            [food_v2_path + 'bread.png' , 8 , 15 , 10 , 8] ,
-            [food_v2_path + 'chocolate.png' , 10 , 20 , 10 , 10],
-            [food_v2_path + 'lollipop.png', 5 , 10 , 5 , 6] ,
-            [food_v2_path + 'meat-on-bone.png' ,3 , 20 , 25 , 12],
-            [food_v2_path + 'watermelon.png' ,-5 , 15 , 5 ,3]]
+food_v2 = [[food_v2_path + 'alarm-clock_23f0.png' , 7 , -5 , -8 , 2],
+            [food_v2_path + 'fire_1f525.png' , 10 , -8 , -7 , 2],
+            [food_v2_path + 'chocolate.png' , 4 , 7 , 2 , 7],
+            [food_v2_path + 'lollipop.png', 3 , 5 , 1 , 7] ,
+            [food_v2_path + 'meat-on-bone.png' ,2 , 8 , 8 , 10],
+            [food_v2_path + 'watermelon.png' ,-3 , 3 , 5 ,3]]
 food_v3_path = 'images/food/v3/'
-
+food_v3 = [
+    [food_v3_path + 'dumpling.png ',5,7,8,10],
+    [food_v3_path + 'lemon.png ',-1,3,5,7],
+    [food_v3_path + 'slice-of-pizza.png ',7,8,-8,10],
+    [food_v3_path + 'soft-ice-cream.png ',2,5,2,7],
+    [food_v3_path + 'soccer-ball_26bd.png ',8 , -8 , -8 , 2],
+    [food_v3_path + 'socks_1f9e6.png ',5, -12 , -12 , 2]]
+food_v4_path = 'images/food/v4/'
+food_v4 = [
+    [food_v4_path + 'bagel.png' , 5 , 5 , 2 , 5] ,
+    [food_v4_path + 'bread.png' , 5 , 4 , 3 , 5] ,
+    [food_v4_path + 'banana.png' ,2,3,5,3],
+    [food_v4_path + 'cheese-wedge.png' ,5,5,-3,10],
+    [food_v4_path + 'cucumber.png ',-4,3,5,3],
+    [food_v4_path + 'tangerine.png ',-5,3,5,5],
+    [food_v4_path + 'pill_1f48a.png' , -10,-5,-10,10]]
+food_v5_path = 'images/food/v5/'
+food_v5 = [[food_v5_path + 'roast-fish.png',60,50,20,50]]
+    
 
 # 自定义事件：心情值，营养值随时间每一秒减少
 TIME = USEREVENT
@@ -107,8 +125,14 @@ UPDATE_LOSER_TIME = USEREVENT + 1
 pygame.time.set_timer(UPDATE_LOSER_TIME ,  10)
 
 # 目标时间以及目标分数
-targets = {1:[30,25] ,
-           2:[40,125]}
+target_level_max = 7
+targets = {1:[15,20] ,
+           2:[20,65],
+           3:[25,150],
+           4:[25,230],
+           5:[30,300],
+           6:[30,350],
+           7:['无穷','无穷']}
 
 
 
