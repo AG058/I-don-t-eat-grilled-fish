@@ -15,7 +15,7 @@ pygame.mixer.init()
 screen_size = screen_size_width , screen_size_height = 800 , 600
 screen_size_center = screen_size_width // 2 , screen_size_height // 2
 screen = pygame.display.set_mode(screen_size)
-pygame.display.set_caption('游戏标题')
+pygame.display.set_caption('我才不吃烤鱼')
 
 # 定义游戏活动大小
 screen_active_size = 800 , 550
@@ -37,26 +37,26 @@ next_target_font_color = BLACK
 
 
 # 导入图片
-game_menu_background_image = pygame.image.load('images/game_menu_background.png')
+game_menu_background_image = pygame.image.load('images/game_menu_background.png').convert_alpha() # 游戏菜单背景
 game_menu_background_image_rect = game_menu_background_image.get_rect()
-start_game_background_image = pygame.image.load('images/start_game_background.png').convert_alpha()
+start_game_background_image = pygame.image.load('images/start_game_background.png').convert_alpha() # 游戏开始背景
 start_game_background_image_rect = start_game_background_image.get_rect()
 copy_little_image = start_game_background_image .subsurface(740,550,60,50) # 用于填补右下角暂停按钮的背景
 copy_little_image_rect = copy_little_image.get_rect()
-copy_little_image_rect.bottomright = screen_size_width , screen_size_height
-text_background_image = pygame.image.load('images/text_background.png').convert_alpha()
+copy_little_image_rect.bottomright = screen_size_width , screen_size_height 
+text_background_image = pygame.image.load('images/text_background.png').convert_alpha() # 显示每一关时的背景
 text_background_image_rect = text_background_image.get_rect()
 text_background_image_rect.center = start_game_background_image_rect.center
-space_text_image = pygame.image.load('images/space.png').convert_alpha()
+space_text_image = pygame.image.load('images/space.png').convert_alpha() # “空格”图片
 space_text_image_rect = space_text_image.get_rect()
-unpause_button_image = pygame.image.load('images/unpause_button.png').convert_alpha()
-pause_button_image = pygame.image.load('images/pause_button.png').convert_alpha()
-unpause_and_pause_button_image_rect = unpause_button_image.get_rect()
-defeat_image = pygame.image.load('images/defeat.png').convert_alpha()
+unpause_button_image = pygame.image.load('images/unpause_button.png').convert_alpha() # 继续小图片
+pause_button_image = pygame.image.load('images/pause_button.png').convert_alpha() # 开始小图片
+unpause_and_pause_button_image_rect = unpause_button_image.get_rect() 
+defeat_image = pygame.image.load('images/defeat.png').convert_alpha() # 游戏结束时，上方的“失败”文字图片
 defeat_image_rect = defeat_image.get_rect()
 defeat_image_rect.centerx = screen_size_width // 2
 defeat_image_rect.top = screen_size_height // 12
-defeat_bg_image = pygame.image.load('images/defeat_bg.png').convert_alpha()
+defeat_bg_image = pygame.image.load('images/defeat_bg.png').convert_alpha() # 游戏结束时灰色背景
 defeat_bg_image_rect = defeat_bg_image.get_rect()
 
 # 创建失败者loser类
@@ -77,7 +77,7 @@ font_90 = pygame.font.Font('font/font.ttf' , 90)
 
 # 定义游戏界面按钮
 start_game_button = TextButton(font_40 ,' 开  始  游  戏' , BLACK , GRAY_1 )
-start_game_button.rect.center = (400 , 500)
+start_game_button.rect.center = (390 , 500)
 # 定义游戏结束界面返回菜单和重新开始按钮
 return_menu_button = TextButton(font_40 ,' 返回菜单'  , BLACK ,  GRAY_0)
 restart_button = TextButton(font_40 ,' 重新开始' , BLACK,  GRAY_0 )
@@ -114,7 +114,7 @@ food_v4 = [
     [food_v4_path + 'tangerine.png ',-5,3,5,5],
     [food_v4_path + 'pill_1f48a.png' , -10,-5,-10,10]]
 food_v5_path = 'images/food/v5/'
-food_v5 = [[food_v5_path + 'roast-fish.png',60,50,20,50]]
+food_v5 = [[food_v5_path + 'roast-fish.png',60,50,30,80]]
     
 
 # 自定义事件：心情值，营养值随时间每一秒减少
@@ -130,8 +130,8 @@ targets = {1:[15,20] ,
            2:[20,65],
            3:[25,150],
            4:[25,230],
-           5:[30,300],
-           6:[30,350],
+           5:[30,430],
+           6:[30,550],
            7:['无穷','无穷']}
 
 

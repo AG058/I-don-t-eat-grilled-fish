@@ -8,6 +8,7 @@ class TextButton(pygame.sprite.Sprite):
         self.unpress = font.render(text , True , unpress_color)
         self.press = font.render(text , True , press_color)
         self.rect = self.unpress.get_rect()
+        # 是否被按下
         self.state = False
 
     # 判断鼠标位置是否在按钮上，并且绘制相应按钮样式
@@ -20,7 +21,7 @@ class TextButton(pygame.sprite.Sprite):
             screen.blit(self.unpress , self.rect)
             self.state = False
 
-    # 判断鼠标是否在按钮上
+    # 判断鼠标是否在按钮上，返回是或否
     def is_or_not_press(self):
         if self.state:
             return True

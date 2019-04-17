@@ -19,12 +19,12 @@ class Player(pygame.sprite.Sprite):
         # 初始化半径
         self.radius = 7
 
-        # 三个值状态
+        # 三个值状态，如果为真则游戏失败
         self.inflamed_value_status = False
         self.mood_value_status = False
         self.nutritional_value_status = False
         
-    # 边缘检测 
+    # 移动并边缘检测 
     def check(self):
         self.rect.center = pygame.mouse.get_pos()
         if self.rect.left != 0 :

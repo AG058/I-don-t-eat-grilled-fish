@@ -6,7 +6,7 @@ game_over = False
 game_over_because_score = False # 录由于分数未达到导致失败
 next_level = False  # 下一关界面开启
 pause_status = False # 初始化暂停为false
-game_init = False # 重新开始游戏初始化
+game_init = False # 开始游戏初始化
 clock = pygame.time.Clock()
 
 while True:
@@ -22,9 +22,8 @@ while True:
             # 判断开始游戏按钮是否被按下
             if event.type == MOUSEBUTTONDOWN:
                 if start_game_button.is_or_not_press() :
-                    game_init= True
+                    game_init= True # 初始化游戏
                     game_menu = False
-                    break
                 
         # 绘制背景
         screen.blit(game_menu_background_image , game_menu_background_image_rect)
@@ -70,8 +69,8 @@ while True:
     
     # 初始化目标计时器，目标分数
     target_time ,  target_score= targets[target_level][0] , targets[target_level][1]
-    # 下一关开启界面只持续5秒钟，显示“恭喜通关”时间3秒，显示关卡信息3秒
-    if target_level == 1:
+    # 下一关开启界面只持续5秒钟，显示“恭喜通关”时间2秒，显示关卡信息3秒
+    if target_level == 1: # 如果是第一关则没有恭喜通关
         next_time = 3
     else :
         next_time = 0
@@ -90,8 +89,8 @@ while True:
             # 显示时间是否足够3秒
             if event.type == TIME:
                 if pause_status == False :
-                    if next_time  == 5:
-                        start_game = True
+                    if next_time  == 5: # 并没有暂停并且时间满足经过5秒
+                        start_game = True # 开始游戏
                         next_level = False
                     else:
                         next_time += 1
@@ -105,15 +104,15 @@ while True:
         screen.blit(text_background_image , text_background_image_rect)
 
         # 绘制“恭喜通关”，并显示2秒后显示关卡信息
-        if target_level > 1 and (next_time  <= 2):
+        if target_level > 1 and (next_time  <= 2): # 关卡大于1的时候才绘制恭喜通关
             next_message_text = font_90.render('恭喜通关' , True , next_target_font_color)
             next_message_text_rect = next_message_text.get_rect()
             next_message_text_rect.center = text_background_image_rect.center
             screen.blit(next_message_text , next_message_text_rect)
-        elif next_time  > 2:
+        elif next_time  > 2: # 如果关卡为1 进入循环前next_time = 3
             # 绘制文字背景框
             screen.blit(text_background_image , text_background_image_rect)
-            if target_level < target_level_max :
+            if target_level < target_level_max : # 关卡数小于最后一关时（最后一关无穷）
                 # 绘制关卡提示文字
                 next_target_text = font_55.render('第 %d 关' % target_level , True , next_target_font_color)
                 next_target_text_rect = next_target_text.get_rect()
@@ -130,7 +129,7 @@ while True:
                 next_target_score_text_rect.center = text_background_image_rect.center[0] , \
                                                text_background_image_rect.top + text_background_image_rect.height // 5 * 4
                 screen.blit(next_target_score_text , next_target_score_text_rect)
-            elif target_level == target_level_max :
+            elif target_level == target_level_max : # 关卡数等于最后一关时（最后一关无穷）
                  # 绘制关卡提示文字
                 next_target_text = font_55.render('第 %d 关  无限关' % target_level , True , next_target_font_color)
                 next_target_text_rect = next_target_text.get_rect()
@@ -148,7 +147,7 @@ while True:
                                                text_background_image_rect.top + text_background_image_rect.height // 5 * 4
                 screen.blit(next_target_score_text , next_target_score_text_rect)
         
-        # 绘制按钮地区的背景，防止按钮重叠
+        # 绘制开始暂停按钮地区的背景，防止按钮重叠
         screen.blit(copy_little_image , copy_little_image_rect)
         
         # 绘制开始暂停按钮,空格文字图片
@@ -201,7 +200,7 @@ while True:
                 
         # 绘制玩家
         if pause_status == False:
-            player.check()  # 检查边缘
+            player.check()  # 移动并检查边缘
         screen.blit(player.image , player.rect)
 
         # 绘制食物
@@ -349,9 +348,9 @@ while True:
             food_level = 5
              # 创建初始v5食物，每种3个
             for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
-                          in food_v4 :
+                          in food_v5 :
                 for i in range(3):
-                    food = Food_v4(screen_active_size ,  \
+                    food = Food_v5(screen_active_size ,  \
                                        food_name , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)   
@@ -360,12 +359,12 @@ while True:
         if player.inflamed_value_status or player.mood_value_status or player.nutritional_value_status:
             game_over = True
             start_game = False
-            break
         
         # 更新屏幕
         pygame.display.update()
         clock.tick(60)
 
+    # 延迟
     delay = 0
     # 游戏结束界面
     while game_over :
@@ -374,6 +373,7 @@ while True:
                 pygame.quit()
                 sys.exit()
 
+            # 更新失败者图片
             if event.type == UPDATE_LOSER_TIME :
                 loser.update()
 
@@ -392,16 +392,16 @@ while True:
         # 绘制失败文字图片
         screen.blit(defeat_image , defeat_image_rect)
         
-        if delay >= 10:
+        if delay >= 10:  # 一秒后绘制失败者
             # 绘制失败者loser
             screen.blit(loser.image , loser.rect)
             
-        if delay >=20:
+        if delay >=20: # 两秒后绘制失败原因
             # 绘制失败原因
             defeat_beacuse_text.check(game_over_because_score , player.inflamed_value_status , player.mood_value_status , player.nutritional_value_status )
             screen.blit(defeat_beacuse_text.image , defeat_beacuse_text.rect)
 
-        if delay >=30:
+        if delay >=30: # 三秒后获知按钮
             # 绘制返回菜单，重新开始按钮
             return_menu_button.rect.top = defeat_beacuse_text.rect.bottom +10
             return_menu_button.rect.right = screen_size_width // 2 - 10
@@ -410,6 +410,7 @@ while True:
             restart_button.rect.left= screen_size_width // 2 + 10
             restart_button.is_or_not_in_and_blit(screen)
 
+        if delay >= 40 : # 四秒后绘制历史纪录
             # 绘制历史分数当前分数
             with open('score.txt' , 'r') as f :
                 history_score = int(f.read())
@@ -423,12 +424,12 @@ while True:
             history_score_and_score_text_rect.centerx = screen_size_width // 2
             history_score_and_score_text_rect.top = restart_button.rect.bottom + 10
             screen.blit(history_score_and_score_text , history_score_and_score_text_rect)
-            delay = 30
+            delay = 40
             
-        if delay < 3 :
+        if delay < 3 : # 绘制三次背景，不然绘制多了 游戏情况就被覆盖了
             screen.blit(defeat_bg_image , defeat_bg_image_rect)
             
-        if delay< 30:
+        if delay< 40:
             delay +=1
 
         # 更新屏幕
