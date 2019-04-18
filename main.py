@@ -22,6 +22,8 @@ while True:
             # 判断开始游戏按钮是否被按下
             if event.type == MOUSEBUTTONDOWN:
                 if start_game_button.is_or_not_press() :
+                    button_sound.play()
+                    pygame.mixer.music.play()
                     game_init= True # 初始化游戏
                     game_menu = False
                 
@@ -36,6 +38,9 @@ while True:
         clock.tick(10)
 
     if game_init:
+        # 初始化
+        pygame.init()
+        
         # 初始化级别
         food_level = 1
         target_level = 1
@@ -63,9 +68,6 @@ while True:
         pause_status = False # 初始化暂停为false
         game_init = False # 重新开始游戏初始化
 
-        # 初始化
-        pygame.init()
-        pygame.mixer.init()
     
     # 初始化目标计时器，目标分数
     target_time ,  target_score= targets[target_level][0] , targets[target_level][1]
@@ -74,8 +76,13 @@ while True:
         next_time = 3
     else :
         next_time = 0
+        
     # 下一关开启界面
+    # 停止音效，播放过关音效
+    pygame.mixer.stop()
+    next_sound.play()
     while next_level:
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -85,6 +92,12 @@ while True:
             if event.type == KEYUP:
                 if event.key == K_SPACE:
                     pause_status = not pause_status
+                    if pause_status:
+                        pygame.mixer.music.pause()
+                        pygame.mixer.pause()
+                    else:
+                        pygame.mixer.music.unpause()
+                        pygame.mixer.unpause()
                     
             # 显示时间是否足够3秒
             if event.type == TIME:
@@ -165,9 +178,13 @@ while True:
         # 更新屏幕
         pygame.display.update()
         clock.tick(10)
-        
+    
     # 开始游戏
     while start_game:
+        # 循环播放背景音
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.play()
+    
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -177,6 +194,12 @@ while True:
             if event.type == KEYUP:
                 if event.key == K_SPACE:
                     pause_status = not pause_status
+                    if pause_status:
+                        pygame.mixer.music.pause()
+                        pygame.mixer.pause()
+                    else:
+                        pygame.mixer.music.unpause()
+                        pygame.mixer.unpause()
                     
             # 心情值，营养值随每秒减少，倒计时减少
             if event.type == TIME:
@@ -191,6 +214,8 @@ while True:
                                 target_level += 1
                                 start_game = False
                             else :
+                                pygame.mixer.music.stop()
+                                pygame.mixer.stop()
                                 game_over_because_score = True # 记录由于分数未达到导致失败
                                 game_over = True
                                 start_game = False
@@ -213,6 +238,7 @@ while True:
         # 判断是否碰撞
         player_food_collide = pygame.sprite.spritecollide(player , food_group , False , pygame.sprite.collide_circle)
         if player_food_collide:
+            eat_sound.play()
             for each in player_food_collide:
                 player.inflamed_value += each.inflamed_value
                 player.mood_value += each.mood_value
@@ -334,6 +360,14 @@ while True:
                                        food_name , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)
+             # 创建初始v5食物，每种3个
+            for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
+                          in food_v5 :
+                for i in range(3):
+                    food = Food_v5(screen_active_size ,  \
+                                       food_name , food_inflamed_value , \
+                                       food_mood_value , food_nutritional_value , food_score )
+                    food_group.add(food)   
         if player.score >= 250 and food_level == 3:
             food_level = 4
              # 创建初始v4食物，每种3个
@@ -344,19 +378,13 @@ while True:
                                        food_name , food_inflamed_value , \
                                        food_mood_value , food_nutritional_value , food_score )
                     food_group.add(food)
-        if player.score >= 450 and food_level == 4:
-            food_level = 5
-             # 创建初始v5食物，每种3个
-            for food_name ,  food_inflamed_value , food_mood_value , food_nutritional_value , food_score \
-                          in food_v5 :
-                for i in range(3):
-                    food = Food_v5(screen_active_size ,  \
-                                       food_name , food_inflamed_value , \
-                                       food_mood_value , food_nutritional_value , food_score )
-                    food_group.add(food)   
+
+            
 
         # 检测三个值是否满足游戏失败值     
         if player.inflamed_value_status or player.mood_value_status or player.nutritional_value_status:
+            pygame.mixer.music.stop()
+            pygame.mixer.stop()
             game_over = True
             start_game = False
         
@@ -380,22 +408,34 @@ while True:
             # 判断返回菜单按钮是否被按下
             if event.type == MOUSEBUTTONDOWN:
                 if return_menu_button.is_or_not_press() :
+                    button_sound.play()
                     game_menu = True
                     game_over = False
 
             # 判断重新开始按钮是否被按下
             if event.type == MOUSEBUTTONDOWN:
                 if restart_button.is_or_not_press() :
+                    button_sound.play()
+                    pygame.mixer.music.play()
                     game_init = True
                     game_over = False                   
 
         # 绘制失败文字图片
         screen.blit(defeat_image , defeat_image_rect)
         
+        # 播放一次失败音效
+        if delay ==0:
+            defeat_sound.play()
+
+        if delay < 3 : # 绘制三次背景，不然绘制多了 游戏情况就被覆盖了
+            screen.blit(defeat_bg_image , defeat_bg_image_rect)
+            
         if delay >= 10:  # 一秒后绘制失败者
             # 绘制失败者loser
             screen.blit(loser.image , loser.rect)
-            
+            if delay == 12 :
+                text_sound.play()
+        
         if delay >=20: # 两秒后绘制失败原因
             # 绘制失败原因
             defeat_beacuse_text.check(game_over_because_score , player.inflamed_value_status , player.mood_value_status , player.nutritional_value_status )
@@ -426,8 +466,6 @@ while True:
             screen.blit(history_score_and_score_text , history_score_and_score_text_rect)
             delay = 40
             
-        if delay < 3 : # 绘制三次背景，不然绘制多了 游戏情况就被覆盖了
-            screen.blit(defeat_bg_image , defeat_bg_image_rect)
             
         if delay< 40:
             delay +=1

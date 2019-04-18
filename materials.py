@@ -35,6 +35,17 @@ GRAY_3 = 100 , 100 , 100
 status_bar_font_color = BLACK
 next_target_font_color = BLACK
 
+# 导入音乐
+button_sound = pygame.mixer.Sound('musics/button.wav')
+defeat_sound = pygame.mixer.Sound('musics/defeat.wav')
+eat_sound = pygame.mixer.Sound('musics/eat.wav')
+eat_sound.set_volume(0.6)
+text_sound = pygame.mixer.Sound('musics/text.wav')
+text_sound.set_volume(0.2)
+next_sound = pygame.mixer.Sound('musics/next.wav')
+next_sound.set_volume(0.2)
+pygame.mixer.music.load('musics/bgm.wav')
+pygame.mixer.music.set_volume(0.2)
 
 # 导入图片
 game_menu_background_image = pygame.image.load('images/game_menu_background.png').convert_alpha() # 游戏菜单背景
@@ -129,9 +140,9 @@ target_level_max = 7
 targets = {1:[15,20] ,
            2:[20,65],
            3:[25,150],
-           4:[25,230],
-           5:[30,430],
-           6:[30,550],
+           4:[25,260],
+           5:[30,450],
+           6:[30,600],
            7:['无穷','无穷']}
 
 
